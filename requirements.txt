@@ -1,0 +1,5 @@
+gymnasium
+moviepy
+numpy
+tqdm
+matplotlib
