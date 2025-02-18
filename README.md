@@ -38,7 +38,7 @@ Nossa implementação do Expected SARSA Off-Policy possui os seguintes component
    - `politica_softmax`: Implementa a política softmax com temperatura
    - `politica_aleatoria`: Implementa a política de seleção aleatória
 
-2. **Algoritmo principal**: 
+2. **Algoritmo principal**:
    - `executar_expected_sarsa`: Implementa o loop principal de treinamento
    - Parâmetros configuráveis: taxa de aprendizado, desconto, políticas de treinamento e alvo
 
@@ -57,6 +57,7 @@ Nossa implementação do Expected SARSA Off-Policy possui os seguintes component
 ### Epsilon-Gulosa (ε-greedy)
 
 A política epsilon-gulosa equilibra exploração e aproveitamento através de um parâmetro ε:
+
 - Com probabilidade (1-ε): escolhe a ação com maior valor Q (gulosa)
 - Com probabilidade ε: escolhe uma ação aleatoriamente
 - Vantagens:
@@ -70,6 +71,7 @@ A política epsilon-gulosa equilibra exploração e aproveitamento através de u
 ### Softmax (Boltzmann)
 
 A política softmax usa uma distribuição de probabilidade baseada nos valores Q:
+
 - Probabilidade de cada ação é proporcional a exp(Q(s,a)/τ)
 - τ é o parâmetro de temperatura que controla a aleatoriedade:
   - τ alto: ações mais equiprováveis (mais exploração)
@@ -86,6 +88,7 @@ A política softmax usa uma distribuição de probabilidade baseada nos valores 
 ### Aleatória (Random)
 
 A política aleatória seleciona ações com probabilidade uniforme:
+
 - Todas as ações têm igual probabilidade de seleção
 - Usada principalmente como baseline e para exploração pura
 - Vantagens:
@@ -113,7 +116,7 @@ Função central para busca de hiperparâmetros ótimos usando amostragem.
 - `policy_name`: Política sendo otimizada (epsilon-gulosa/softmax/aleatoria)
 - `max_passos`: Quantidade de passos que vai ser utilizado em cada iteração
 
-### Funcionamento:
+### Funcionamento
 
 1. Sugere valores para taxa de aprendizado (1e-3 a 0.5) e desconto (0.8 a 0.999)
 2. Para ε-greedy: sugere ε entre 0.01-0.5
@@ -125,7 +128,7 @@ Função central para busca de hiperparâmetros ótimos usando amostragem.
 
 Orquestra o processo de otimização para todos ambientes e políticas.
 
-### Fluxo:
+### Fluxo
 
 1. Para cada ambiente (FrozenLake, Taxi, etc.):
     - Cria estudo Optuna com sampler TPE (Tree-structured Parzen Estimator)
@@ -137,7 +140,7 @@ Orquestra o processo de otimização para todos ambientes e políticas.
 
 3. Retorna dicionário hierárquico com melhores parâmetros por ambiente/política
 
-### Estratégias de Otimização:
+### Estratégias de Otimização
 
 - TPESampler: Algoritmo de amostragem eficiente para espaços de alta dimensão
 
@@ -146,8 +149,6 @@ Orquestra o processo de otimização para todos ambientes e políticas.
 - Semente Fixa (42): Garante reprodutibilidade dos experimentos
 
 ## Ambientes de Teste
-
-### CliffWalking
 
 Ambiente de grade 4x12 onde o agente deve navegar do ponto inicial até o objetivo evitando cair do penhasco.
 
