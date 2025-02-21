@@ -21,7 +21,7 @@ A principal diferença entre as versões Off-Policy e On-Policy do Expected SARS
 - **On-Policy**: Usa a mesma política para agir e aprender
 - **Off-Policy**: Usa duas políticas diferentes:
   - Política comportamental (behavior policy): usada para explorar e coletar experiências
-  - Política alvo (target policy): política que está sendo otimizada
+  - Política alvo (target policy): politica que vai ser utilizada quando a behavior já preencheu a Q-table para escolher a ação a ser tomada em cada estado.
 
 Em nossa implementação, testamos três tipos de políticas:
 
@@ -95,6 +95,55 @@ A política aleatória seleciona ações com probabilidade uniforme:
 - Desvantagens:
   - Nenhum aproveitamento do conhecimento adquirido
   - Ineficiente para aprendizado direto
+
+## Otimização de Hiperparâmetros com Optuna
+
+Para melhorar o desempenho do algoritmo em diferentes ambientes, implementamos um sistema de otimização automática de hiperparâmetros usando a biblioteca Optuna. Esta seção descreve as novas funções adicionadas:
+
+### Funções de Otimização
+
+`objective(trial, env_name, policy_name)`
+
+Função central para busca de hiperparâmetros ótimos usando amostragem.
+
+**Parâmetros:**
+
+- `trial`: Objeto do Optuna para sugestão de valores
+- `env_name`: Nome do ambiente Gymnasium
+- `policy_name`: Política sendo otimizada (epsilon-gulosa/softmax/aleatoria)
+- `max_passos`: Quantidade de passos que vai ser utilizado em cada iteração
+
+### Funcionamento:
+
+1. Sugere valores para taxa de aprendizado (1e-3 a 0.5) e desconto (0.8 a 0.999)
+2. Para ε-greedy: sugere ε entre 0.01-0.5
+3. Para softmax: sugere temperatura entre 0.1-10.0
+4. Executa o Expected SARSA com 100 episódios (reduzido para agilizar busca)
+5. Retorna a média das últimas 100 recompensas como métrica de qualidade
+
+`otimizar_hiperparametros(envs, n_trials, max_passos)`
+
+Orquestra o processo de otimização para todos ambientes e políticas.
+
+### Fluxo:
+
+1. Para cada ambiente (FrozenLake, Taxi, etc.):
+    - Cria estudo Optuna com sampler TPE (Tree-structured Parzen Estimator)
+    - Usa pruner para interromper trials pouco promissores
+
+2. Para cada política (ε-greedy, softmax, random):
+    - Executa n_trials tentativas de otimização
+    - Armazena os melhores parâmetros encontrados
+
+3. Retorna dicionário hierárquico com melhores parâmetros por ambiente/política
+
+### Estratégias de Otimização:
+
+- TPESampler: Algoritmo de amostragem eficiente para espaços de alta dimensão
+
+- MedianPruner: Interrompe trials com desempenho abaixo da mediana
+
+- Semente Fixa (42): Garante reprodutibilidade dos experimentos
 
 ## Ambientes de Teste
 
