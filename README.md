@@ -221,3 +221,5 @@ O estudo em questão foi desenvolvido a fim de demosntrar as adaptações que as
 Assim sendo, vemos que o Expected-SARSA quando transformado em _off-policy_ apresentou bom comportamento com as políticas aplicadas para explorar o ambiente, contudo reforçamos a contribuição significativa da escolha dos hiperparâmetros adequados.
 
 ## Referências
+
+- [RL Fácil - Cap. 6 - SARSA de n Passos / Técnicas Auxiliares](https://github.com/pablo-sampaio/rl_facil?tab=readme-ov-file#cap-6---sarsa-de-n-passos--t%C3%A9cnicas-auxiliares)
